@@ -53,7 +53,7 @@ public class BasicView extends View {
 //        lineP.lineTo(300,100);
 //        lineP.close();
 //        canvas.drawPath(lineP,linePath);
-//        //画弧线路径
+         //画弧线路径
 //        Paint arcPath = new Paint();
 //        arcPath.setColor(Color.RED);
 //        arcPath.setStrokeWidth(10f);
@@ -73,6 +73,7 @@ public class BasicView extends View {
         ovalPath.addOval(rectF,Path.Direction.CCW);
         Region rgn = new Region();
         rgn.setPath(ovalPath,new Region(50,50,200,200));
+
         drawRegion(canvas,rgn,mRegionPaint);
 
     }

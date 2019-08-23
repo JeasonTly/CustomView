@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-<com.aorise.fdas.customviewlearn.base.BasicView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    <!--<com.aorise.fdas.customviewlearn.base.ArrowRulerView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="300dp" />-->
+    <!--<com.aorise.fdas.customviewlearn.base.HorizontalChartView-->
+        <!--android:id="@+id/id_one"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="300dp">-->
+    <!--</com.aorise.fdas.customviewlearn.base.HorizontalChartView>-->
+    <!--<com.aorise.fdas.customviewlearn.base.ChartView-->
+        <!--android:id="@+id/id_two"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="400dp" />-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.aorise.fdas.customviewlearn.base.MyCharView
+            android:id="@+id/chart_view_one"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </ScrollView>
 
-</android.support.constraint.ConstraintLayout>
+
+    <!--<com.aorise.fdas.customviewlearn.base.EchartsView-->
+        <!--android:id="@+id/echart_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center">-->
+    <!--</com.aorise.fdas.customviewlearn.base.EchartsView>-->
+</LinearLayout>

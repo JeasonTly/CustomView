@@ -1,0 +1,54 @@
+package com.aorise.fdas.customviewlearn.base;
+
+import android.util.Log;
+
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * Created by Tuliyuan.
+ * Date: 2019/8/22.
+ */
+public class DateUtil {
+    private static final String TAG = "DateUtil";
+
+    public static String getDayAfterToday(String today, int appendDay) {
+        String nextDay = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = dateFormat.parse(today, new ParsePosition(0));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + appendDay);
+        Log.d("DateUtil", "获取" + appendDay + "天后的日期为" + calendar.getTime().toString());
+        Date endCalendar = dateFormat.parse(dateFormat.format(calendar.getTime()), new ParsePosition(0));
+        nextDay = dateFormat.format(endCalendar);
+        return nextDay;
+    }
+
+    public static int getDiffDay(String firstDate, String NextDate) {
+        int diffDay = 0;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date firdate = dateFormat.parse(firstDate, new ParsePosition(0));
+        Date nextdate = dateFormat.parse(NextDate, new ParsePosition(0));
+        long from1 = firdate.getTime();
+        long to1 = nextdate.getTime();
+        Log.d(TAG, " from1 " + from1 + " to1 " + to1);
+        diffDay = (int) ((to1 - from1) / (1000 * 60 * 60 * 24));
+        Log.d(TAG, "差距了......." + Math.abs(diffDay) + "天");
+        return Math.abs(diffDay);
+    }
+
+    public static int getDiffMonth(String firstDate, String NextDate) {
+        int diffMonth = 0;
+        diffMonth = getDiffDay(firstDate, NextDate) / 30;
+        int diffDay =  getDiffDay(firstDate, NextDate) %30;
+        Log.d(TAG, "差距了" + diffMonth + "月");
+        Log.d(TAG, "差距了" + diffDay + "");
+        if (diffDay < 30 && diffDay > 0) {
+            diffMonth ++;
+        }
+        return diffMonth;
+    }
+}

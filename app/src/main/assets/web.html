@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+</head>
+<body>
+<div id="main" style="height:300px;width:100%;"></div>
+<!-- ECharts单文件引入 -->
+<script src="./js/echarts.js"></script>
+
+<script type="text/javascript">
+    //初始化路径
+    var myChart;
+     require.config({
+            paths: {
+                echarts: './js'
+            }
+        });
+    //  通用属性定义
+    var option = {
+                title : {
+                    text : "Echart示例"
+                },
+                tooltip : {
+                    show : false
+                },
+                toolbox : {
+                    show : false
+                },
+            };
+
+
+        //创建折线图
+        function createLineChart(dataArray){
+        options = {
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['周一','周二','周三','周四','周五','周六','周日']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'成交',
+                type:'line',
+                smooth:true,
+                data:dataArray
+             }
+            ]
+        };
+    }
+
+       //创建柱状图
+       function createBarChart(dataArray){
+       options = {
+            xAxis : [
+                {
+                    type : 'category',
+                    data : ['周一','周二','周三','周四','周五','周六','周日']
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:'成交',
+                    type:'bar',
+                    data:dataArray
+
+                }
+            ]
+        };
+
+    }
+
+        //创建饼状图
+        function createPieChart(dataArray){
+        options = {
+        series : [
+            {
+                type:'pie',
+                radius: ['50','70'],
+                center: ['48%', '45%'],
+                data:[
+                    {value:335, name:'直接访问'},
+                    {value:310, name:'邮件营销'},
+                    {value:234, name:'联盟广告'},
+                    {value:135, name:'视频广告'},
+                    {value:1548, name:'搜索引擎'}
+                ]
+            }
+        ]
+        };
+    }
+
+
+        function createChart(chartKind,dataArray){
+            if (chartKind=='line') {
+                doCreateChart(createLineChart(dataArray));
+            };
+            if (chartKind=='bar') {
+                doCreateChart(createBarChart(dataArray));
+            };
+            if (chartKind=='pie') {
+                doCreateChart(createPieChart(dataArray));
+            };
+
+
+        }
+
+        function doCreateChart(specificChartFunction){
+
+            require(
+            ['echarts','echarts/theme/default','echarts/chart/line',
+            'echarts/chart/bar','echarts/chart/pie'
+            ],
+            function(ec,theme){
+            myChart =ec.init(document.getElementById('main'),theme);
+            myChart.showLoading({
+                text : "图表数据正在努力加载..."
+            });
+            specificChartFunction;
+            myChart.setOption(options); //先把可选项注入myChart中
+            myChart.hideLoading();
+            }
+        );
+        }
+
+    </script>
+</body>

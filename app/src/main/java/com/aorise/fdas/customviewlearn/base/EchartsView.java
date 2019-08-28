@@ -31,11 +31,11 @@ public class EchartsView extends WebView {
         WebSettings webSettings = getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setUseWideViewPort(true);
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setSupportZoom(false);
+//        webSettings.setBuiltInZoomControls(true);
+//        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+//        webSettings.setLoadWithOverviewMode(true);
+//        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+//        webSettings.setSupportZoom(false);
         loadUrl("file:///android_asset/echarts.html");
     }
 

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
 //                820, 932, 901, 934, 1290, 1330, 1320
 //        };
 
-        targetView = (MyCharView) findViewById(R.id.chart_view_one );
+//        targetView = (MyCharView) findViewById(R.id.chart_view_one );
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

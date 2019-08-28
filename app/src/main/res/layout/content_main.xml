@@ -7,32 +7,21 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_main">
 
-    <!--<com.aorise.fdas.customviewlearn.base.ArrowRulerView-->
+    <!--<ScrollView-->
+
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="300dp" />-->
-    <!--<com.aorise.fdas.customviewlearn.base.HorizontalChartView-->
-        <!--android:id="@+id/id_one"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="300dp">-->
-    <!--</com.aorise.fdas.customviewlearn.base.HorizontalChartView>-->
-    <!--<com.aorise.fdas.customviewlearn.base.ChartView-->
-        <!--android:id="@+id/id_two"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="400dp" />-->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.aorise.fdas.customviewlearn.base.MyCharView
-            android:id="@+id/chart_view_one"
+        <!--android:layout_height="match_parent">-->
+        <!--<com.aorise.fdas.customviewlearn.chart_zero.LinChartLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:orientation="vertical" />-->
+    <!--</ScrollView>-->
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </ScrollView>
-
-
-    <!--<com.aorise.fdas.customviewlearn.base.EchartsView-->
-        <!--android:id="@+id/echart_view"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_gravity="center">-->
-    <!--</com.aorise.fdas.customviewlearn.base.EchartsView>-->
+            android:layout_height="wrap_content">
+            <com.aorise.fdas.customviewlearn.base.ChartView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </HorizontalScrollView>
 </LinearLayout>

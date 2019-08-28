@@ -5,7 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -75,7 +77,7 @@ public class MyCharView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         width = measureWidth(widthMeasureSpec);
         height = measureHeight(heightMeasureSpec);
-        setMeasuredDimension(width, 3040);
+
         Log.d(TAG, "width is " + width + " height is " + height);
         totalDay = DateUtil.getDiffDay(mProjectStartTime, mProjectEndTime);
         totalMonth = DateUtil.getDiffMonth(mProjectStartTime, mProjectEndTime);
@@ -88,14 +90,15 @@ public class MyCharView extends View {
         planHeight = (height - getPaddingTop() - getPaddingBottom() - 2 * YPadding - YTextPadding - 8) / (mBeanList.size());
         mRectHeigh = planHeight / 2;
         Log.d(TAG, " everyDayWidthPx is " + everyDayWidthPx + " planHeight is " + planHeight);
-        float nowYLocation = 0;
-        everyDayWidthPx = Math.max(everyDayWidthPx, 10);
+        // everyDayWidthPx = Math.max(everyDayWidthPx, 10);
         planHeight = Math.max(planHeight, 280);
         for (int i = 0; i < mBeanList.size(); i++) {
             Log.d(TAG, " .....添加文字的 坐标系 Y " + planHeight * i + "  X  " + DateUtil.getDiffDay(mBeanList.get(i).getStartTime(), mProjectStartTime) * everyDayWidthPx);
-            mTextFlotY.add(nowYLocation + planHeight * i);
-            mTextFlotX.add(DateUtil.getDiffDay(mBeanList.get(i).getStartTime(), mProjectStartTime) * everyDayWidthPx);
+            mTextFlotY.add(planHeight * i);
+            mTextFlotX.add(DateUtil.getDiffDay(mBeanList.get(i).getStartTime(), mProjectStartTime) * everyDayWidthPx + XPadding);
         }
+        height = (int) (planHeight * (mTextFlotY.size()));
+        setMeasuredDimension(width, height);
     }
 
 
@@ -106,7 +109,18 @@ public class MyCharView extends View {
         //canvas.drawLine(XPadding, height - YTextPadding, width - getPaddingRight() - YPadding, height - YTextPadding, mXPaint);
         //绘制X轴
         canvas.drawLine(XPadding, YTextPadding + YPadding, width - getPaddingRight() - XPadding, YTextPadding + YPadding, mXPaint);
-
+        canvas.drawLine(width - getPaddingRight() - XPadding, YTextPadding + YPadding, width - getPaddingRight() - XPadding - 20, YTextPadding / 2, mXPaint);
+        //绘制Y轴
+        canvas.drawLine(XPadding, YTextPadding + YPadding, XPadding, height, mYPaint);
+        for (int i = 0; i < totalMonth + 1; i++) {
+            if (i == 0) {
+                canvas.drawText(mProjectStartTime, XPadding, YTextPadding, paint_font2);
+                continue;
+            }
+            Log.d(TAG, " 标注时间线的 x轴宽度 " + everyYLineWidth);
+            canvas.drawText(DateUtil.getDayAfterToday(mProjectStartTime, totalDay / 4 * i,mProjectEndTime), everyDayWidthPx * i * totalDay / 4 - XPadding * 2, YTextPadding, paint_font2);
+            canvas.drawLine(XPadding + everyDayWidthPx * i * totalDay / 4, YTextPadding + YPadding, XPadding + everyDayWidthPx * i * totalDay / 4, height, mYSignPaint);
+        }
 
         for (int i = 0; i < mTextFlotY.size(); i++) {
             Log.d(TAG, "1234 x is " + mTextFlotX.get(i) + " y is " + mTextFlotY.get(i));
@@ -115,9 +129,11 @@ public class MyCharView extends View {
                 canvas.drawText(mBeanList.get(i).getPlanName(), 2 * XPadding, mTextFlotY.get(i) + 2 * YTextPadding + YPadding, paint_font2);
                 canvas.drawText("起止时间" + mBeanList.get(i).getStartTime() + "----" + mBeanList.get(i).getEndTime(), 2 * XPadding, mTextFlotY.get(i) + 2 * YTextPadding + YPadding + 30, paint_font2);
                 canvas.drawText("完成百分比" + mBeanList.get(i).getPercent() + "%", 2 * XPadding, mTextFlotY.get(i) + 2 * YTextPadding + YPadding + 60, paint_font2);
+//                StaticLayout staticLayout = StaticLayout.Builder.obtain("产品计划ADBDKLASDJS",0,(mBeanList.get(i).getPlanName() + mBeanList.get(i).getStartTime()+ mBeanList.get(i).getStartTime()).length(),paint_font2,150).setEllipsize(TextUtils.TruncateAt.MARQUEE).build();
+//                staticLayout.draw(canvas);
                 RectF rectF = new RectF();
                 rectF.set(mTextFlotX.get(i),
-                       mTextFlotY.get(i) + 2 * YTextPadding + YPadding + 80,
+                        mTextFlotY.get(i) + 2 * YTextPadding + YPadding + 80,
                         mTextFlotX.get(i) + everyDayWidthPx * DateUtil.getDiffDay(mBeanList.get(i).getStartTime(), mBeanList.get(i).getEndTime()),
                         mTextFlotY.get(i) + 2 * YTextPadding + YPadding + 140);
                 RectF rectPercent = new RectF();
@@ -129,48 +145,38 @@ public class MyCharView extends View {
                 canvas.drawRect(rectPercent, mPecentRectPaint);
                 continue;
             }
-            canvas.drawText(mBeanList.get(i).getPlanName(), 2 * XPadding, mTextFlotY.get(i)+20, paint_font2);
-            canvas.drawText("起止时间" + mBeanList.get(i).getStartTime() + "----" + mBeanList.get(i).getEndTime(), 2 * XPadding, mTextFlotY.get(i) + 50, paint_font2);
-            canvas.drawText("完成百分比" + mBeanList.get(i).getPercent() + "%", 2 * XPadding, mTextFlotY.get(i) + 80, paint_font2);
-            RectF rectF = new RectF();
-            rectF.set(mTextFlotX.get(i),
-                    mTextFlotY.get(i) + 120,
-                    mTextFlotX.get(i) + everyDayWidthPx * DateUtil.getDiffDay(mBeanList.get(i).getStartTime(), mBeanList.get(i).getEndTime()),
-                    mTextFlotY.get(i) + 180);
-            RectF rectPercent = new RectF();
-            rectPercent.set(mTextFlotX.get(i),
-                    mTextFlotY.get(i) + 120,
-                    (mTextFlotX.get(i) + everyDayWidthPx * DateUtil.getDiffDay(mBeanList.get(i).getStartTime(), mBeanList.get(i).getEndTime())) * (mBeanList.get(i).getPercent() / 100),
-                    mTextFlotY.get(i) + 180);
-            canvas.drawRect(rectF, mRectPaint);
-            canvas.drawRect(rectPercent, mPecentRectPaint);
-        }
 
-        setMeasuredDimension(width, 3040);
-        //绘制Y轴
-        canvas.drawLine(XPadding, YTextPadding + YPadding, XPadding, 3040, mYPaint);
-        for (int i = 0; i < totalMonth + 1; i++) {
-            if (i == 0) {
-                canvas.drawText(mProjectStartTime, XPadding, YTextPadding, paint_font2);
-                continue;
-            }
-            Log.d(TAG, " 标注时间线的 x轴宽度 " + everyYLineWidth);
-            canvas.drawText(DateUtil.getDayAfterToday(mProjectStartTime, 31 * i), everyYLineWidth * i - XPadding * 2, YTextPadding, paint_font2);
-            canvas.drawLine(XPadding + everyYLineWidth * i, YTextPadding + YPadding, XPadding + everyYLineWidth * i + 2, 3040, mYSignPaint);
+            canvas.drawText(mBeanList.get(i).getPlanName(), 2 * XPadding, mTextFlotY.get(i), paint_font2);
+            canvas.drawText("起止时间" + mBeanList.get(i).getStartTime() + "----" + mBeanList.get(i).getEndTime(), 2 * XPadding, mTextFlotY.get(i) + 30, paint_font2);
+            canvas.drawText("完成百分比" + mBeanList.get(i).getPercent() + "%", 2 * XPadding, mTextFlotY.get(i) + 60, paint_font2);
+//            StaticLayout staticLayout = StaticLayout.Builder.obtain(mBeanList.get(i).getPlanName() + mBeanList.get(i).getStartTime()+ mBeanList.get(i).getStartTime(),0,(mBeanList.get(i).getPlanName() + mBeanList.get(i).getStartTime()+ mBeanList.get(i).getStartTime()).length(),paint_font2,150).setEllipsize(TextUtils.TruncateAt.MARQUEE).build();
+//                staticLayout.draw(canvas);
+            RectF rectF = new RectF();
+            rectF.set(mTextFlotX.get(i) + XPadding,
+                    mTextFlotY.get(i) + 100,
+                    mTextFlotX.get(i) + XPadding + everyDayWidthPx * DateUtil.getDiffDay(mBeanList.get(i).getStartTime(), mBeanList.get(i).getEndTime()),
+                    mTextFlotY.get(i) + 160);
+            RectF rectPercent = new RectF();
+            rectPercent.set(mTextFlotX.get(i) + XPadding,
+                    mTextFlotY.get(i) + 100,
+                    (mTextFlotX.get(i) + XPadding + everyDayWidthPx * DateUtil.getDiffDay(mBeanList.get(i).getStartTime(), mBeanList.get(i).getEndTime())) * (mBeanList.get(i).getPercent() / 100),
+                    mTextFlotY.get(i) + 160);
+            canvas.drawRect(rectF, mRectPaint);
+            //           canvas.drawRect(rectPercent, mPecentRectPaint);
         }
 
     }
 
     private void initPaint(Context context) {
         mXPaint = new Paint();
-        mXPaint.setStrokeWidth(8);
-        mXPaint.setColor(Color.BLACK);
+        mXPaint.setStrokeWidth(4);
+        mXPaint.setColor(Color.GRAY);
         mXPaint.setStyle(Paint.Style.FILL);
         mXPaint.setAntiAlias(true);
 
         mYPaint = new Paint();
-        mYPaint.setStrokeWidth(8);
-        mYPaint.setColor(Color.BLACK);
+        mYPaint.setStrokeWidth(4);
+        mYPaint.setColor(Color.GRAY);
         mYPaint.setStyle(Paint.Style.FILL);
         mYPaint.setAntiAlias(true);
 
@@ -208,13 +214,10 @@ public class MyCharView extends View {
         mBeanList.add(new Bean(93.9f, "2018-09-13", "2018-10-22", "产品BBBB研阶段"));
         mBeanList.add(new Bean(26.9f, "2018-09-13", "2018-10-22", "产品ADDA研阶段"));
         mBeanList.add(new Bean(79.9f, "2018-09-13", "2018-10-22", "产品ADDA研阶段"));
-        mBeanList.add(new Bean(80.4f, "2018-09-13", "2018-10-22", "产品ADDA研阶段"));
-        mBeanList.add(new Bean(76.9f, "2018-09-19", "2018-10-22", "产品ADDA研阶段"));
-        mBeanList.add(new Bean(37.9f, "2018-08-13", "2018-10-29", "产品ADDA研阶段"));
-        mBeanList.add(new Bean(18.9f, "2018-08-09", "2018-10-22", "产品ADDA研阶段"));
+        mBeanList.add(new Bean(18.9f, "2018-08-07", "2018-10-22", "产品ADDA研阶段"));
+        mBeanList.add(new Bean(18.9f, "2018-08-16", "2018-10-22", "产品A222DDA2研阶段"));
         mBeanList.add(new Bean(18.9f, "2018-08-09", "2018-10-22", "产品A222DDA2研阶段"));
-        mBeanList.add(new Bean(18.9f, "2018-08-09", "2018-10-22", "产品A222DDA2研阶段"));
-        mBeanList.add(new Bean(18.9f, "2018-08-09", "2018-10-22", "产品A222DDA2研阶段"));
+        mBeanList.add(new Bean(18.9f, "2018-08-29", "2018-10-22", "产品A222DDA2研阶段"));
     }
 
     private int measureWidth(int measureSpec) {

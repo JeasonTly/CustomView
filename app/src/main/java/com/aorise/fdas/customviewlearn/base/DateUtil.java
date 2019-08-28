@@ -14,7 +14,7 @@ import java.util.Date;
 public class DateUtil {
     private static final String TAG = "DateUtil";
 
-    public static String getDayAfterToday(String today, int appendDay) {
+    public static String getDayAfterToday(String today, int appendDay, String endDateStr) {
         String nextDay = "";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = dateFormat.parse(today, new ParsePosition(0));
@@ -22,8 +22,13 @@ public class DateUtil {
         calendar.setTime(date);
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + appendDay);
         Log.d("DateUtil", "获取" + appendDay + "天后的日期为" + calendar.getTime().toString());
+        Date endDate = dateFormat.parse(endDateStr, new ParsePosition(0));
         Date endCalendar = dateFormat.parse(dateFormat.format(calendar.getTime()), new ParsePosition(0));
-        nextDay = dateFormat.format(endCalendar);
+        if (endCalendar.after(endDate)) {
+            nextDay = dateFormat.format(endDate);
+        } else {
+            nextDay = dateFormat.format(endCalendar);
+        }
         return nextDay;
     }
 
@@ -36,6 +41,10 @@ public class DateUtil {
         long to1 = nextdate.getTime();
         Log.d(TAG, " from1 " + from1 + " to1 " + to1);
         diffDay = (int) ((to1 - from1) / (1000 * 60 * 60 * 24));
+        int diffhour = (int) ((to1 - from1) / (1000 * 60 * 60));
+        if (diffhour > 0) {
+            diffDay++;
+        }
         Log.d(TAG, "差距了......." + Math.abs(diffDay) + "天");
         return Math.abs(diffDay);
     }
@@ -43,11 +52,11 @@ public class DateUtil {
     public static int getDiffMonth(String firstDate, String NextDate) {
         int diffMonth = 0;
         diffMonth = getDiffDay(firstDate, NextDate) / 30;
-        int diffDay =  getDiffDay(firstDate, NextDate) %30;
+        int diffDay = getDiffDay(firstDate, NextDate) % 30;
         Log.d(TAG, "差距了" + diffMonth + "月");
         Log.d(TAG, "差距了" + diffDay + "");
         if (diffDay < 30 && diffDay > 0) {
-            diffMonth ++;
+            diffMonth++;
         }
         return diffMonth;
     }
